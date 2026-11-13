@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Google Identity Services SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://accounts.google.com/gsi/client?hl=en" async defer></script>
+
+    <!-- Apple ID SDK -->
+    <script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+
+    <title>X</title>
+</head>
+<body>
+
+    <div class="obrazec">
+        <div class="leva">
+        <h1>Happening <br>now.</h1>
+            <div class="buttons" id="socialButtons">
+                <!-- Gumb za prijavo s telefonom -->
+                <div class="btn phone" id="btn-phone" onclick="handlePhoneLogin()">Continue with phone</div>
+                
+                <!-- Google gumb (kontejner) -->
+                <div id="g_id_onload"
+                     data-client_id="799613197801-a6mvntftqin7gsgnudthu8onfgk58noc.apps.googleusercontent.com"
+                     data-callback="handleGoogleResponse">
+                </div>
+                <div class="g_id_signin" 
+                    data-type="standard" 
+                    data-shape="pill" 
+                    data-theme="outline" 
+                    data-text="continue_with" 
+                    data-size="large"
+                    data-locale="en"
+                    data-width="350">
+                </div>
+
+                <!-- Gumb za prijavo z Apple -->
+                <div class="btn apple" id="btn-apple" onclick="handleAppleLogin()">Continue with Apple</div>
+            </div>
+            
+            <div class="divider" id="divizor">
+                <span>or</span>
+            </div>
+            
+            <!-- Prijavni obrazec, ki deluje v dveh korakih -->
+            <form class="login-form" id="loginForm" onsubmit="handleLoginSubmit(event)">
+                <!-- 1. Korak: Vnos emaila ali uporabniškega imena -->
+                <div id="step1Container">
+                    <input type="text" name="vnos" id="vnos" class="vnos" placeholder="Email or username" required>
+                    <button type="submit" class="oddaja btn-mt">Continue</button>
+                    <!-- Dodan gumb/povezava za registracijo z enakim stilom -->
+                    <a href="register.html" class="oddaja btn-mt btn-register">Register</a>
+                </div>
+
+                <!-- 2. Korak: Vnos gesla (skrito na začetku) -->
+                <div id="step2Container" class="hidden-step">
+                    <div id="userInfoDisplay" class="user-info-display"></div>
+                    <input type="password" name="password" id="password" class="vnos" placeholder="Password">
+                    
+                    <button type="submit" class="oddaja btn-mt">Log in</button>
+                    
+                    <!-- Gumb za nazaj, če se je uporabnik zmotil -->
+                    <button type="button" class="oddaja btn-back" onclick="goBackToStep1()">Back</button>
+                </div>
+            </form>
+
+            <!-- Obvestilo o uspešni prijavi in gumb domov -->
+            <div id="successMessage" class="success-message">
+                <div class="success-title">
+                    Prijava je uspešna! Dobrodošli nazaj.
+                </div>
+                <!-- Gumb Domov za vrnitev na začetek -->
+                <button type="button" class="oddaja" onclick="resetToHome()">Domov / Nazaj na prijavo</button>
+            </div>
+
+            <div class="terms" id="termsBox">
+                By continuing, you agree to our <a href="https://x.com/en/tos">Terms of Service</a>, <a href="https://x.com/en/privacy">Privacy Policy</a> and <a href="https://help.x.com/en/rules-and-policies/x-cookies">Cookie Use</a>.
+            </div>
+        </div>
+
+        <!-- QR koda -->
+        <div class="desna">
+            <div class="giant-x">
+                <svg id="xLogo" class="giant-x-svg" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+
+                <!-- Nadzornik barve pod logotipom -->
+                <div class="color-controller">
+                    <div class="color-controller-header">
+                        <label for="hueSlider">Barva logotipa:</label>
+                        <span id="colorHexDisplay">#FFFFFF</span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="hueSlider" min="0" max="360" value="0" class="color-slider" title="Spreminjaj barvni odtenek">
+                    </div>
+                    <div class="color-presets">
+                        <input type="color" id="colorPicker" value="#ffffff" title="Izberi točno barvo">
+                        <button type="button" class="preset-btn" data-color="#ffffff" style="background-color: #ffffff;" title="Bela"></button>
+                        <button type="button" class="preset-btn" data-color="#1d9bf0" style="background-color: #1d9bf0;" title="X modra"></button>
+                        <button type="button" class="preset-btn" data-color="#00ba7c" style="background-color: #00ba7c;" title="Zelena"></button>
+                        <button type="button" class="preset-btn" data-color="#f91880" style="background-color: #f91880;" title="Roza"></button>
+                        <button type="button" class="preset-btn" data-color="#ffd400" style="background-color: #ffd400;" title="Rumena"></button>
+                        <button type="button" class="preset-btn" data-color="#7856ff" style="background-color: #7856ff;" title="Vijolična"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="qr-box">
+                <div class="qr-text">Scan to get the app</div>
+                <div class="qr-visual"><a href="qr.html"><img src="download.svg" alt="QR Code"></a></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <a href="https://about.x.com/en" target="_blank">About</a>
+        <a href="https://help.x.com/en/using-x/download-the-x-app" target="_blank">Get App</a>
+        <a href="https://grok.com/" target="_blank">Grok</a>
+        <a href="https://help.x.com/en" target="_blank">Help</a>
+        <a href="https://x.com/en/tos" target="_blank">Terms</a>
+        <a href="https://x.com/en/privacy" target="_blank">Privacy</a>
+        <a href="https://help.x.com/en/rules-and-policies/x-cookies" target="_blank">Cookies</a>
+        <a href="https://x.ai/careers" target="_blank">Creators</a>
+        <a href="https://business.x.com/en/advertising?ref=gl-tw-tw-twitter-advertise" target="_blank">Ads & Business</a>
+        <a href="https://developer.x.com/" target="_blank">Developers</a>
+        <a href="https://x.com/i/jf/stories/home" target="_blank">News</a>
+        <a href="https://help.x.com/en/resources/accessibility" target="_blank">Accessibility</a>
+        <a href="">© 2026 X Corp.</a>
+    </footer>
+
+    <!-- Skripte -->
+    <script src="index.js"></script>
+    <script src="auth.js">
+    </script>
+</body>
+</html>
